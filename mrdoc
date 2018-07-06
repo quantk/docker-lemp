@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+log() {
+  echo "$@"
+}
+
+run() {
+	docker-compose up -d
+}
+
+stop() {
+    docker-compose stop
+}
+
+stat() {
+    docker-compose ps
+}
+
+restart() {
+    stop
+    run
+}
+
+build() {
+    docker-compose build
+}
+
+terminal() {
+    docker-compose exec --user dockuser $1 zsh
+}
+
+assets() {
+    docker-compose exec --user dockuser $1 zsh -c "cd ${2} && php bin/console assets:install --symlink"
+}
+
+cache() {
+    docker-compose exec --user dockuser $1 zsh -c "cd ${2} && php bin/console cache:clear"
+}
+
+$*

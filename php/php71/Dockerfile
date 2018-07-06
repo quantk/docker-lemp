@@ -1,7 +1,7 @@
-# ARG HOST_USER_UID=1000
-# ARG HOST_USER_GID=1000
-
 FROM php:7.1-fpm
+
+ENV HOST_USER_UID=1000
+ENV HOST_USER_GID=1000
 
 RUN apt-get update && apt-get install -y \
 		libmcrypt-dev \
@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-		libldap2-dev
+		libldap2-dev \
+		zsh \
+		wget
 
 RUN docker-php-ext-install \
 		pdo \
@@ -44,19 +46,19 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 		php -r "unlink('composer-setup.php');" && \
 		mv composer.phar /usr/local/bin/composer
 
-# RUN usermod -u 1000 www-data 
-
-RUN set -ex                                                 && \
-                                                               \
-    echo 'Creating notroot user and group from host'        && \
-    groupadd -g 1000 dockuser                      && \
-    useradd -lm -u 1000 -g 1000 dockuser
-
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# RUN chown -R www-data:www-data cont/var/cache
-# RUN chown -R www-data:www-data cont/var/logs
+RUN set -ex                                                 && \
+                                                               \
+    echo 'Creating notroot user and group from host'        && \
+    groupadd -g ${HOST_USER_UID} dockuser                      && \
+    useradd -lm -u ${HOST_USER_UID} -g ${HOST_USER_GID} dockuser
+
+RUN su dockuser -c "wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true"
+RUN chsh -s /usr/bin/zsh dockuser
+RUN su dockuser -c "mkdir -p ~/.oh-my-zsh/plugins/docker/"
+RUN su dockuser -c "curl -fLo ~/.oh-my-zsh/plugins/docker/_docker https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker"

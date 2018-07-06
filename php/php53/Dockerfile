@@ -1,7 +1,7 @@
-# ARG HOST_USER_UID=1000
-# ARG HOST_USER_GID=1000
-
 FROM helder/php-5.3
+
+ENV HOST_USER_UID=1000
+ENV HOST_USER_GID=1000
 
 RUN apt-get update && apt-get install -y \
 		libmcrypt-dev \
@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-		libldap2-dev
+		libldap2-dev \
+		zsh \
+		wget
 
 RUN docker-php-ext-install \
 		pdo \
@@ -48,17 +50,15 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 		php -r "unlink('composer-setup.php');" && \
 		mv composer.phar /usr/local/bin/composer
 
-# RUN usermod -u 1000 www-data 
+RUN pecl install xdebug-2.2.0
 
 RUN set -ex                                                 && \
                                                                \
     echo 'Creating notroot user and group from host'        && \
-    groupadd -g 1000 dockuser                      && \
-    useradd -lm -u 1000 -g 1000 dockuser
-RUN pecl install xdebug-2.2.0
+    groupadd -g ${HOST_USER_UID} dockuser                      && \
+    useradd -lm -u ${HOST_USER_UID} -g ${HOST_USER_GID} dockuser
 
-# RUN docker-php-ext-enable xdebug
-
-
-# RUN chown -R www-data:www-data cont/var/cache
-# RUN chown -R www-data:www-data cont/var/logs
+RUN su dockuser -c "wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true"
+RUN chsh -s /usr/bin/zsh dockuser
+RUN su dockuser -c "mkdir -p ~/.oh-my-zsh/plugins/docker/"
+RUN su dockuser -c "curl -fLo ~/.oh-my-zsh/plugins/docker/_docker https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker"
