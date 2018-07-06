@@ -1,0 +1,8 @@
+code/*
+db_data/*
+mongo_data/*
+logs/
+.env
+shared/
+.idea/
+.docker-sync
