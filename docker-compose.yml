@@ -2,24 +2,31 @@ version: '3'
 services:
   web:
     env_file: ./.env
-    build: ./nginx
+    build: 
+      context: ./configuration/nginx
+      dockerfile: Dockerfile
+      args:
+        NGINX_VERSION: ${NGINX_VERSION}
     environment: 
-      NGINX_VERSION: ${NGINX_VERSION}
       HOST_USER_UID: ${HOST_USER_UID}
       HOST_USER_GID: ${HOST_USER_GID}
     links:
-      - php71
+      - php7
       - php53
       - mysql
     ports:
       - "${NGINX_PORT}:80"
     volumes:
       - './code:/code:cached'
-      - './nginx/sites:/etc/nginx/conf.d/'
-      - './nginx/nginx.conf:/etc/nginx/nginx.conf'
+      - "${NGINX_VHOST_DIR}:/etc/nginx/conf.d/"
+      - './configuration/nginx/nginx.conf:/etc/nginx/nginx.conf'
   mysql:
     env_file: ./.env
-    build: ./mysql
+    build: 
+      dockerfile: Dockerfile
+      context: ./configuration/mysql
+      args:
+        MYSQL_VERSION: ${MYSQL_VERSION}
     volumes:
       - './db_data:/var/lib/mysql'
       - './shared:/shared'
@@ -32,9 +39,13 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "${MYSQL_PORT}:3306"
-  php71:
+  php7:
     env_file: ./.env
-    build: ./php/php71
+    build: 
+      context: ./configuration/php/php7
+      dockerfile: Dockerfile
+      args: 
+        PHP7_VERSION: ${PHP7_VERSION}
     environment:
       HOST_USER_UID: ${HOST_USER_UID}
       HOST_USER_GID: ${HOST_USER_GID}
@@ -44,24 +55,8 @@ services:
       - '9002'
     volumes:
       - './code:/code:cached'
-      - './php/www.conf:/usr/local/etc/php-fpm.d/zz-docker.conf'
-      - './php/php71/fpm.conf:/usr/local/etc/php-fpm.conf'
-      - './php/php71/ext:/usr/local/etc/php/conf.d'
-      - './php/php71/php.ini:/usr/local/etc/php/php.ini'
-    working_dir: /code
-  php53:
-    env_file: ./.env
-    build: ./php/php53
-    environment:
-      HOST_USER_UID: ${HOST_USER_UID}
-      HOST_USER_GID: ${HOST_USER_GID}
-    links:
-      - mysql
-    expose:
-      - '9003'
-    volumes:
-      - './code:/code:cached'
-      - './php/www.conf:/usr/local/etc/php-fpm.d/zz-docker.conf'
-      - './php/php53/ext:/usr/local/etc/php/conf.d'
-      - './php/php53/php.ini:/usr/local/etc/php/php.ini'
+      - './configuration/php/www.conf:/usr/local/etc/php-fpm.d/zz-docker.conf'
+      - './configuration/php/php7/fpm.conf:/usr/local/etc/php-fpm.conf'
+      - './configuration/php/php7/ext:/usr/local/etc/php/conf.d'
+      - './configuration/php/php7/php.ini:/usr/local/etc/php/php.ini'
     working_dir: /code

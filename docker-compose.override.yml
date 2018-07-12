@@ -1,0 +1,18 @@
+version: '3'
+services:
+  php53:
+    env_file: ./.env
+    build: ./configuration/php/php53
+    environment:
+      HOST_USER_UID: ${HOST_USER_UID}
+      HOST_USER_GID: ${HOST_USER_GID}
+    links:
+      - mysql
+    expose:
+      - '9003'
+    volumes:
+      - './code:/code:cached'
+      - './configuration/php/www.conf:/usr/local/etc/php-fpm.d/zz-docker.conf'
+      - './configuration/php/php53/ext:/usr/local/etc/php/conf.d'
+      - './configuration/php/php53/php.ini:/usr/local/etc/php/php.ini'
+    working_dir: /code

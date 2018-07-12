@@ -1,6 +1,0 @@
-127.0.0.1	localhost
-172.21.0.5  docker-kis.loc
-172.21.0.5  docker-cont.loc
-172.21.0.5  docker-webldap.loc
-172.21.0.5  docker-barcoder.loc
-172.21.0.2  mysql
