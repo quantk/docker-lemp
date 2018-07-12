@@ -28,13 +28,8 @@ build() {
 terminal() {
     docker-compose exec --user dockuser $1 zsh
 }
-
-assets() {
-    docker-compose exec --user dockuser $1 zsh -c "cd ${2} && php bin/console assets:install --symlink"
-}
-
-cache() {
-    docker-compose exec --user dockuser $1 zsh -c "cd ${2} && php bin/console cache:clear"
+t() {
+    docker-compose exec --user dockuser $1 zsh
 }
 
 $*
