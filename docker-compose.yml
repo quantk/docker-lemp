@@ -30,7 +30,6 @@ services:
     volumes:
       - './db_data:/var/lib/mysql'
       - './shared:/shared'
-    container_name: mysql
     restart: always
     environment: 
       MYSQL_VERSION: ${MYSQL_VERSION}
