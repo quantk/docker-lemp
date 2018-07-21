@@ -2,6 +2,8 @@ version: '3'
 services:
   php53:
     env_file: ./.env
+    networks:
+      - app_net
     build: ./configuration/php/php53
     environment:
       HOST_USER_UID: ${HOST_USER_UID}

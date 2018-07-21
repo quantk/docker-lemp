@@ -1,4 +1,5 @@
 code/*
+!code/.gitkeep
 db_data/*
 mongo_data/*
 logs/
@@ -6,3 +7,8 @@ logs/
 shared/
 .idea/
 .docker-sync
+
+
+
+configuration/nginx/sites/*
+!configuration/nginx/sites/.gitkeep 
