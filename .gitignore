@@ -8,6 +8,8 @@ shared/
 .idea/
 .docker-sync
 
+data/*
+!data/.gitkeep
 
 
 configuration/nginx/sites/*

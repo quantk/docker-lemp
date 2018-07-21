@@ -32,7 +32,7 @@ services:
       args:
         MYSQL_VERSION: ${MYSQL_VERSION}
     volumes:
-      - './db_data:/var/lib/mysql'
+      - './data/mysql:/var/lib/mysql'
       - './shared:/shared'
     restart: always
     environment: 
@@ -65,6 +65,25 @@ services:
       - './configuration/php/php7/ext:/usr/local/etc/php/conf.d'
       - './configuration/php/php7/php.ini:/usr/local/etc/php/php.ini'
     working_dir: /code
+
+  redis:
+    image: "redis:alpine"
+    networks:
+      - app_net
+    ports:
+      - "${REDIS_PORT}:6379"
+  rabbitmq:
+    networks:
+      - app_net
+    image: rabbitmq:${RABBITMQ_VERSION}
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: user
+    ports:
+      - "${RABBITMQ_PORT}:15672"
+    restart: always
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
 
 networks:
   app_net:

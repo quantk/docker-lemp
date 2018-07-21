@@ -52,6 +52,9 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 
 RUN pecl install xdebug-2.2.0
 
+RUN pecl install -o -f redis \
+&&  rm -rf /tmp/pear
+
 RUN set -ex                                                 && \
                                                                \
     echo 'Creating notroot user and group from host'        && \

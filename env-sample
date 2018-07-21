@@ -24,3 +24,14 @@ PHP7_VERSION=7.1
 MYSQL_VERSION=5.6
 MYSQL_PORT=3306
 MYSQL_ROOT_PASSWORD=12345
+
+###  ---------------------------------------------------
+###  REDIS SERVER SETTINGS
+###  ---------------------------------------------------
+REDIS_PORT=6379
+
+###  ---------------------------------------------------
+###  RABBITMQ SERVER SETTINGS
+###  ---------------------------------------------------
+RABBITMQ_VERSION=latest
+RABBITMQ_PORT=15672

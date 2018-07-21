@@ -10,9 +10,16 @@ RUN apt-get update && apt-get install -y \
 		libreadline-dev \
 		libcurl4-gnutls-dev \
 		libxml2-dev \
-		zlib1g-dev \
 		libicu-dev \
-		g++ \
+		automake \
+	    cmake \
+	    libmagickwand-dev \
+	    librabbitmq-dev \
+	    pkg-config \
+	    ssh-client \
+	    supervisor \
+	    zlib1g-dev \
+    	g++ \
 		git \
 		libfreetype6-dev \
         libjpeg62-turbo-dev \
@@ -50,6 +57,13 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
+
+RUN pecl install -o -f redis \
+&&  rm -rf /tmp/pear \
+&&  docker-php-ext-enable redis
+
+RUN pecl install amqp \
+&& docker-php-ext-enable amqp
 
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
