@@ -19,6 +19,7 @@ services:
       - './code:/code:cached'
       - "${NGINX_VHOST_DIR}:/etc/nginx/conf.d/"
       - './configuration/nginx/nginx.conf:/etc/nginx/nginx.conf'
+      - './logs/nginx:/var/log/nginx'
   mysql:
     env_file: ./.env
     networks:
