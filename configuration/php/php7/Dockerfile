@@ -62,7 +62,12 @@ RUN pecl install -o -f redis \
 &&  rm -rf /tmp/pear \
 &&  docker-php-ext-enable redis
 
-RUN pecl install amqp \
+RUN apt-get update \
+	&& apt-get install -y \
+	libssh-dev \
+	&& docker-php-ext-install sockets
+
+RUN pecl install amqp-1.9.3 \
 && docker-php-ext-enable amqp
 
 RUN pecl install mongodb \
